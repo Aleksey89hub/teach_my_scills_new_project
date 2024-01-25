@@ -82,7 +82,5 @@ class Main(Base):
         """
         Clicks on the basket icon/button to move to the basket page.
         """
-        from pages.basket_page import Basket
         self.open("")
         self.click(self.BASKET)
-        return Basket
