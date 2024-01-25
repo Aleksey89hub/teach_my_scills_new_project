@@ -1,5 +1,6 @@
-from pages.main_page import Main
 import pytest
+
+from pages.main_page import Main
 
 
 @pytest.mark.smoke
