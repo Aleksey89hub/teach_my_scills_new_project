@@ -16,6 +16,7 @@ class Main(Base):
     NEW_FRAME = "//iframe[@class ='modal-iframe']"
     FOOTER_LOGGO = "//div[@class ='footer-style__logo']"
     SEARCH_CLOSE = "//span[@class = 'search__close']"
+    BASKET = "//a[@title ='Корзина']"
 
     def __init__(self, page: Page) -> None:
         """
@@ -76,3 +77,10 @@ class Main(Base):
         self.scroll_to_element(self.FOOTER_LOGGO)
         self.assertion.check_presence(self.FOOTER_LOGGO,
                                       AssertMessage.TITLE_SHOULD_BE_SHOWN.value.format(footer_logo))
+
+    def move_to_basket_page(self):
+        """
+        Clicks on the basket icon/button to move to the basket page.
+        """
+        self.open("")
+        self.click(self.BASKET)
