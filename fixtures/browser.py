@@ -2,6 +2,11 @@ import pytest
 from playwright.sync_api import Browser, BrowserContext, Page, sync_playwright
 from dotenv import load_dotenv
 
+from pages.authorization_page import AuthorizationWindow
+from pages.basket_page import Basket
+from pages.catalog_page import Catalog
+from pages.main_page import Main
+
 load_dotenv()
 
 
@@ -14,7 +19,7 @@ def pytest_addoption(parser):
     parser.addoption('--l', action='store', default='en-US', help='Choose locale')
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope='class', autouse=True)
 def browser(request) -> Page:
     playwright = sync_playwright().start()
     if request.config.getoption("bn") == 'remote_chrome':
@@ -38,6 +43,26 @@ def browser(request) -> Page:
         context.close()
     browser.close()
     playwright.stop()
+
+
+@pytest.fixture(scope='class')
+def setup_main(browser) -> Main:
+    return Main(browser)
+
+
+@pytest.fixture(scope='class')
+def setup_basket(browser) -> Basket:
+    return Basket(browser)
+
+
+@pytest.fixture(scope='class')
+def setup_catalog(browser) -> Catalog:
+    return Catalog(browser)
+
+
+@pytest.fixture(scope='class')
+def setup_authorization_window(browser) -> AuthorizationWindow:
+    return AuthorizationWindow(browser)
 
 
 def get_firefox_browser(playwright, request) -> Browser:
