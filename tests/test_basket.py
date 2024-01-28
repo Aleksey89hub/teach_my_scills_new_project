@@ -1,16 +1,18 @@
+import allure
 import pytest
-
-from pages.basket_page import Basket
-from pages.main_page import Main
 
 
 @pytest.mark.smoke
-@pytest.mark.usefixtures("browser")
+@pytest.mark.usefixtures("setup_main", "setup_basket", "setup_catalog")
 class TestBasketPage:
     @pytest.mark.run(order=1)
-    def test_verify_empty_basket_label_is_shown(self, browser):
-        main_page = Main(browser)
-        basket_page = Basket(browser)
+    @allure.title("Verify that the label 'empty basket' is shown")
+    def test_verify_empty_basket_label_is_shown(self, setup_main, setup_basket):
+        setup_main.move_to_basket_page()
+        setup_basket.is_label_empty_basket_shown()
 
-        main_page.move_to_basket_page()
-        basket_page.is_label_empty_basket_shown()
+    @pytest.mark.run(order=2)
+    @allure.title("Verify that a item is added to basket")
+    def test_verify_item_is_added_to_basket(self, setup_basket, setup_catalog):
+        setup_basket.click_on_catalog_field()
+        setup_catalog.verify_that_item_is_added_to_basker("iPhone 15")
