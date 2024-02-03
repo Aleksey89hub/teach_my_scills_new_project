@@ -1,4 +1,7 @@
-pytest
-playwright
+pytest~=7.4.4
+playwright~=1.41.0
 requests
-python-dotenv
+python-dotenv~=1.0.0
+Faker~=22.5.1
+allure-pytest
+python-slugify~=8.0.2

@@ -16,6 +16,9 @@ class Base:
     def input(self, locator: str, data: str) -> None:
         self.page.locator(locator).fill(data)
 
+    def clear(self, locator: str) -> None:
+        self.page.locator(locator).clear()
+
     def scroll_to_element(self, locator: str) -> None:
         loc = self.page.locator(locator)
         loc.scroll_into_view_if_needed(timeout=12000)
@@ -84,3 +87,6 @@ class Base:
             frame.locator(locator_for_input).fill(data)
         else:
             print("Iframe not found with the specified locator:", iframe_locator)
+
+    def click_element_by_index(self, locator: str, index: int) -> None:
+        self.page.locator(locator).nth(index).click()

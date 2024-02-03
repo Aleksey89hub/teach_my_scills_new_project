@@ -1,6 +1,15 @@
 import pytest
 from playwright.sync_api import Browser, BrowserContext, Page, sync_playwright
 from dotenv import load_dotenv
+import hashlib
+import os
+from slugify import slugify
+import allure
+
+from pages.authorization_page import AuthorizationWindow
+from pages.basket_page import Basket
+from pages.catalog_page import Catalog
+from pages.main_page import Main
 
 load_dotenv()
 
@@ -14,7 +23,7 @@ def pytest_addoption(parser):
     parser.addoption('--l', action='store', default='en-US', help='Choose locale')
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope='class', autouse=True)
 def browser(request) -> Page:
     playwright = sync_playwright().start()
     if request.config.getoption("bn") == 'remote_chrome':
@@ -38,6 +47,26 @@ def browser(request) -> Page:
         context.close()
     browser.close()
     playwright.stop()
+
+
+@pytest.fixture(scope='class')
+def setup_main(browser) -> Main:
+    return Main(browser)
+
+
+@pytest.fixture(scope='class')
+def setup_basket(browser) -> Basket:
+    return Basket(browser)
+
+
+@pytest.fixture(scope='class')
+def setup_catalog(browser) -> Catalog:
+    return Catalog(browser)
+
+
+@pytest.fixture(scope='class')
+def setup_authorization_window(browser) -> AuthorizationWindow:
+    return AuthorizationWindow(browser)
 
 
 def get_firefox_browser(playwright, request) -> Browser:
@@ -87,3 +116,34 @@ def get_context(browser, request, start) -> BrowserContext:
 @pytest.fixture(scope="function")
 def return_back(browser):
     browser.go_back()
+
+
+@pytest.fixture(scope='function', autouse=True)
+def add_artifacts_to_allure_teardown(request):
+    """
+    Make after step fixture for attach screenshot, video and trace.\n
+    Use flags: --screenshot=only-on-failure --video=retain-on-failure --tracing=retain-on-failure --full-page-screenshot
+    :param request:
+    :return:
+    """
+    yield
+
+    output_path = os.path.join(request.config.rootdir, "allure-results",
+                               truncate_file_name(slugify(request.node.nodeid)))
+
+    ext = ("png", "webm", "zip")
+    if not os.path.exists(output_path):
+        return
+    for file in os.listdir(output_path):
+        if file.endswith(ext):
+            allure.attach(
+                open(os.path.join(output_path, file), 'rb').read(),
+                name=f"{file}",
+                extension=file.split('.')[-1]
+            )
+
+
+def truncate_file_name(file_name: str) -> str:
+    if len(file_name) < 256:
+        return file_name
+    return f"{file_name[:100]}-{hashlib.sha256(file_name.encode()).hexdigest()[:7]}-{file_name[-100:]}"

@@ -3,9 +3,11 @@ import os
 
 class Environment:
     PROD = 'prod'
+    TEST = 'test'
 
     URLS = {
-        PROD: 'https://www.onliner.by/'
+        PROD: "https://www.onliner.by/",
+        TEST: "https://https://ozon.by"
     }
 
     def __init__(self):
