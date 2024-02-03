@@ -53,18 +53,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests for conftest.TestLogin.test_user_login.executor": "Run",
-    "Python tests.Python tests for test_example.TestLogin.test_user_login.executor": "Run",
-    "Python tests.Python tests for test_example.test_example.executor": "Run",
-    "Python tests.Python tests for test_main_page.TestMainPage.executor": "Run",
-    "Python tests.Python tests for test_main_page.TestMainPage.test_verify_logo_is_present.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests for conftest.TestLogin.test_user_login.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_example.TestLogin.test_user_login.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_example.test_example.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_main_page.TestMainPage.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_main_page.TestMainPage.test_verify_logo_is_present.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tests" />
