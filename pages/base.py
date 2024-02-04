@@ -1,4 +1,5 @@
-from playwright.async_api import FrameLocator
+import os
+from playwright.async_api import FrameLocator, expect
 from playwright.sync_api import Page, TimeoutError, Response
 from data_helper.environment import host
 
@@ -7,11 +8,14 @@ class Base:
     def __init__(self, page: Page):
         self.page = page
 
-    def open(self, uri) -> Response | None:
+    def open(self, uri="") -> Response | None:
         return self.page.goto(f"{host.get_base_url()}{uri}", wait_until='domcontentloaded')
 
     def click(self, locator: str) -> None:
         self.page.click(locator)
+
+    def click_via_js(self, locator: str) -> None:
+        self.page.evaluate(f'document.querySelector("{locator}").click()')
 
     def input(self, locator: str, data: str) -> None:
         self.page.locator(locator).fill(data)
@@ -72,9 +76,14 @@ class Base:
     def drag_and_drop(self, source, target) -> None:
         self.page.drag_and_drop(source, target)
 
-    def alert_accept(self, locator: str) -> None:
-        self.page.on('dialog', lambda dialog: dialog.accept())
-        self.click(locator)
+    def is_alert_accepted(self) -> bool:
+        try:
+            self.page.on("dialog", lambda dialog: dialog.accept())
+            alert_present = self.page.evaluate("() => window.alert !== undefined")
+            return alert_present
+        except Exception as e:
+            print(f"Error checking for alert presence: {str(e)}")
+            return False
 
     def refresh(self) -> Response | None:
         return self.page.reload(wait_until='domcontentloaded')
@@ -90,3 +99,34 @@ class Base:
 
     def click_element_by_index(self, locator: str, index: int) -> None:
         self.page.locator(locator).nth(index).click()
+
+    def get_text_via_js(self, locator: str) -> str:
+        return self.page.evaluate(f'document.querySelector("{locator}").textContent.trim()')
+
+    def open_new_tab(self, locator):
+        with self.page.expect_popup() as popup_info:
+            self.page.click(locator)
+
+        popup_page = popup_info.value
+        popup_page.bring_to_front()
+
+        return popup_page
+
+    def open_new_tab_and_get_text(self,
+                                  locclick,
+                                  locpresence, ) -> str:
+        with self.page.expect_popup() as page1_info:
+            self.page.click(locclick)
+        page1 = page1_info.value
+        page1.bring_to_front()
+        loc = page1.locator(locpresence)
+
+        return loc.text_content()
+
+    def download_file(self, file_locator) -> str:
+        with self.page.expect_download() as download_info:
+            self.click(file_locator)
+        download = download_info.value
+        name = download.suggested_filename
+        download.save_as(os.path.join(os.getcwd(), "../download_file", name))
+        return name

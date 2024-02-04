@@ -14,7 +14,6 @@ class AuthorizationWindow(Base):
     WARN_MESSAGE_ENTER_PASSWORD = "//div[contains(text(),'Укажите пароль')]"
     WARN_MESSAGE_ENTER_NAME_OR_EMAIL = "//div[contains(text(),'Укажите ник или e-mail')]"
     PASSWORD_FIELD = "//input[@type = 'password']"
-    fake = Faker()
 
     def __init__(self, page: Page) -> None:
         """
@@ -22,6 +21,7 @@ class AuthorizationWindow(Base):
         """
         super().__init__(page)
         self.assertion = Assertions(page)
+        self.fake = Faker()
 
     @allure.step("Click on the login button")
     def click_on_log_in_button(self) -> None:
