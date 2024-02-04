@@ -123,8 +123,10 @@ class Base:
 
         return loc.text_content()
 
-    def download_file(self, file_locator):
+    def download_file(self, file_locator) -> str:
         with self.page.expect_download() as download_info:
             self.click(file_locator)
         download = download_info.value
-        download.save_as(os.path.join(os.getcwd(), "../download_file", download.suggested_filename))
+        name = download.suggested_filename
+        download.save_as(os.path.join(os.getcwd(), "../download_file", name))
+        return name
