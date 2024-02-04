@@ -7,7 +7,7 @@ class Environment:
 
     URLS = {
         PROD: "https://www.onliner.by/",
-        TEST: "https://https://ozon.by"
+        TEST: "https://the-internet.herokuapp.com/"
     }
 
     def __init__(self):

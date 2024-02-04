@@ -5,6 +5,7 @@ import hashlib
 import os
 from slugify import slugify
 import allure
+import glob
 
 from pages.authorization_page import AuthorizationWindow
 from pages.basket_page import Basket
@@ -62,6 +63,21 @@ def setup_basket(browser) -> Basket:
 @pytest.fixture(scope='class')
 def setup_catalog(browser) -> Catalog:
     return Catalog(browser)
+
+
+@pytest.fixture(scope='function')
+def remove_data(request):
+    target_directory = os.path.abspath(os.path.join(os.getcwd(), "../download_file"))
+    yield
+
+    files_to_remove = glob.glob(os.path.join(target_directory, '*'))
+
+    for file_path in files_to_remove:
+        try:
+            os.remove(file_path)
+            print(f"File removed: {file_path}")
+        except Exception as e:
+            print(f"Error removing file: {e}")
 
 
 @pytest.fixture(scope='class')
